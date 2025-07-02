@@ -109,7 +109,6 @@ class MainPage(BasePage):
 
     def get_tariff_description(self, tariff):
         tariff.click()
-        time.sleep(3)
         self.wait_for_clickable_element(tariff.find_element(*MainPageLocators.TARIFF_TYPE_INFO))
 
         info_btn = tariff.find_element(*MainPageLocators.TARIFF_TYPE_INFO)
