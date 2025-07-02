@@ -1,3 +1,5 @@
+import time
+
 from allure import title
 from data import test_data
 from pages.main_page import MainPage
@@ -49,7 +51,6 @@ class TestMainFunctionality:
 
         price_fast = page.get_price().text
         duration_fast = page.get_duration().text
-        print(price_fast, duration_fast)
 
         page.click_optimal_route()
         optimal_btn = page.get_optimal_route()
@@ -58,9 +59,9 @@ class TestMainFunctionality:
 
         price_optimal = page.get_price().text
         duration_optimal = page.get_duration().text
-        print(price_optimal, duration_optimal)
+
         assert price_fast != price_optimal, "Стоимость не пересчитывется"
-        assert duration_fast != duration_optimal, "Продолжительность не пересчитывается или не изменилась"
+        assert duration_fast != duration_optimal, "Продолжительность не пересчитывается"
 
     @title("Проверка активности типов траспорта в режиме Свой")
     def test_active_vehicle_types(self, driver):
@@ -114,20 +115,7 @@ class TestMainFunctionality:
             has_active = "active" in tt.get_attribute("class")
             if has_active:
                 break
-        assert has_active
 
-    def test_taxi_tariff_active(self, driver):
-        page = MainPage(driver)
-        page.enter_address_from(test_data.FIRST_ADDRESS)
-        page.enter_address_to(test_data.SECOND_ADDRESS)
-        page.click_call_taxi_btn()
-
-        assert page.is_tariff_picker_loaded()
-
-        tariff_types = page.get_tariff_types()
-        assert len(tariff_types) == 6
-
-        has_active = any("active" in tt.get_attribute("class") for tt in tariff_types)
         assert has_active
 
     @title("Проверка названия тарифов такси по ТЗ")
@@ -152,6 +140,8 @@ class TestMainFunctionality:
         for tariff in page.get_tariff_types():
             title = page.get_tariff_title(tariff)
             description = page.get_tariff_description(tariff)
+            print(title)
+            print(description)
             assert test_data.TARIFF_DESCRIPTION[title] == description
 
     @title("Проверка загрузки формы заказа такси по ТЗ")
