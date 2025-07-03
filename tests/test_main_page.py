@@ -1,5 +1,3 @@
-import time
-
 from allure import title
 from data import test_data
 from pages.main_page import MainPage
@@ -100,7 +98,6 @@ class TestMainFunctionality:
     @title("Проверка отображения тарифов такси")
     def test_taxi_tariff_active(self, driver):
         page = MainPage(driver)
-
         page.enter_address_from(test_data.FIRST_ADDRESS)
         page.enter_address_to(test_data.SECOND_ADDRESS)
         page.click_call_taxi_btn()
@@ -110,11 +107,8 @@ class TestMainFunctionality:
         tariff_types = page.get_tariff_types()
         assert len(tariff_types) == 6
 
-        has_active = False
-        for tt in tariff_types:
-            has_active = "active" in tt.get_attribute("class")
-            if has_active:
-                break
+        # Check if any tariff type has the 'active' class
+        has_active = any("active" in tt.get_attribute("class") for tt in tariff_types)
 
         assert has_active
 
@@ -140,8 +134,6 @@ class TestMainFunctionality:
         for tariff in page.get_tariff_types():
             title = page.get_tariff_title(tariff)
             description = page.get_tariff_description(tariff)
-            print(title)
-            print(description)
             assert test_data.TARIFF_DESCRIPTION[title] == description
 
     @title("Проверка загрузки формы заказа такси по ТЗ")
